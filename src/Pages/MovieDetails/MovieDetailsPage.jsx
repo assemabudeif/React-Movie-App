@@ -5,6 +5,7 @@ import {useParams} from "react-router-dom";
 import Container from "@mui/material/Container";
 import {Favorite, FavoriteBorder, Star} from "@mui/icons-material";
 import Button from "@mui/material/Button";
+import {useDispatch, useSelector} from "react-redux";
 
 function MovieDetailsPage() {
     const [movie, setMovie] = useState(null);
@@ -12,10 +13,39 @@ function MovieDetailsPage() {
     const [error, setError] = useState("");
     const params = useParams();
     const [isFavorite, setIsFavorite] = useState(false);
+    const favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+    const dispatch = useDispatch();
+    const state = useSelector(state => state);
 
-    const toggleFavorite = () => {
+    const CheckFavorite = () => {
+        if (movie) {
+            state.favorites.favorites.map((m) => {
+                if (m.id === movie.id) {
+                    setIsFavorite(true);
+                    return true;
+                }
+                return false;
+            });
+        }
+    }
+    const ToggleFavorites = (e) => {
+        e.preventDefault();
+        if (isFavorite) {
+            // setIsFavorite(false);
+            const index = favorites.indexOf(movie);
+            favorites.splice(index, 1);
+
+            localStorage.setItem("favorites", JSON.stringify(favorites));
+            dispatch({type: "SET_FAVORITE", payload: favorites});
+        } else {
+            // setIsFavorite(true);
+            favorites.push(movie);
+            localStorage.setItem("favorites", JSON.stringify(favorites));
+            dispatch({type: "SET_FAVORITE", payload: favorites});
+        }
         setIsFavorite(!isFavorite);
-    };
+    }
+
 
     const GetMovieDetails = () => {
         axios.get('https://api.themoviedb.org/3/movie/' + params.id,
@@ -28,6 +58,7 @@ function MovieDetailsPage() {
                 setLoading(false);
                 console.log(data)
                 setMovie(data.data);
+                CheckFavorite();
             })
             .catch((error) => {
                 setLoading(false);
@@ -35,9 +66,13 @@ function MovieDetailsPage() {
                 setError(error.message);
             });
     }
+
     useEffect(() => {
-        // Replace with your actual API endpoint
         GetMovieDetails();
+    }, []);
+
+    useEffect(() => {
+        CheckFavorite();
     }, [movie]);
 
     if (loading) {
@@ -94,7 +129,7 @@ function MovieDetailsPage() {
                             variant="contained"
                             color={isFavorite ? "secondary" : "primary"}
                             startIcon={isFavorite ? <Favorite/> : <FavoriteBorder/>}
-                            onClick={toggleFavorite}
+                            onClick={ToggleFavorites}
                             sx={{
                                 marginTop: 2,
                                 borderRadius: 0,

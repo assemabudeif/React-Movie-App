@@ -1,27 +1,59 @@
 import Container from "@mui/material/Container";
 import {Link as RoutLink} from "react-router-dom";
 import Box from "@mui/material/Box";
-import {CircularProgress} from "@mui/material";
-import {Image, Star} from "@mui/icons-material";
+import {Delete, Favorite, FavoriteBorder, Image, Star} from "@mui/icons-material";
+import {useDispatch, useSelector} from "react-redux";
+import {useEffect, useState} from "react";
+import IconButton from "@mui/material/IconButton";
 
-
-/*
-*
-adult:false
-backdrop_path:"/xg27NrXi7VXCGUr7MG75UqLl6Vg.jpg"
-genre_ids:(4) [16, 10751, 12, 35]
-id:1022789
-original_language:"en"
-original_title:"Inside Out 2"
-overview:"Teenager Riley's mind headquarters is undergoing a sudden demolition to make room for something entirely unexpected: new Emotions! Joy, Sadness, Anger, Fear and Disgust, who’ve long been running a successful operation by all accounts, aren’t sure how to feel when Anxiety shows up. And it looks like she’s not alone."
-popularity:4728.541
-poster_path:"/vpnVM9B6NMmQpWeZvzLvDESb2QY.jpg"
-release_date:"2024-06-11"
-title:"Inside Out 2"
-video:false
-vote_average:7.633
-vote_count:2076*/
 function MovieComponent(props) {
+
+    const [isFavorite, setIsFavorite] = useState(false);
+    const state = useSelector(state => state);
+    const dispatch = useDispatch();
+    const favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+
+    const CheckFavorite = () => {
+        state.favorites.favorites.map((movie) => {
+            if (movie.id === props.movie.id) {
+                setIsFavorite(true);
+                return true;
+
+            }
+            return false;
+        });
+    }
+    const ToggleFavorites = (e) => {
+        e.preventDefault();
+        if (isFavorite) {
+            setIsFavorite(false);
+            const index = favorites.indexOf(props.movie);
+            favorites.splice(index, 1);
+
+            localStorage.setItem("favorites", JSON.stringify(favorites));
+            dispatch({type: "SET_FAVORITE", payload: favorites});
+        } else {
+            setIsFavorite(true);
+            favorites.push(props.movie);
+            localStorage.setItem("favorites", JSON.stringify(favorites));
+            dispatch({type: "SET_FAVORITE", payload: favorites});
+        }
+        setIsFavorite(!isFavorite);
+    }
+
+    const DeleteFavorite = (e) => {
+        e.preventDefault();
+        favorites.splice(props.index, 1);
+
+        localStorage.setItem("favorites", JSON.stringify(favorites));
+        dispatch({type: "SET_FAVORITE", payload: favorites});
+
+    }
+
+    useEffect(() => {
+        CheckFavorite();
+    }, []);
+
 
     return (
         <Container component={RoutLink} to={"/movie/" + props.movie.id} sx={{
@@ -96,6 +128,38 @@ function MovieComponent(props) {
 
             <h2>{props.movie.title}</h2>
             <span>{props.movie.release_date}</span>
+            {
+                props.favPage ? (
+                        <IconButton
+                            onClick={DeleteFavorite}
+                            sx={{
+                                color: "red",
+                                marginLeft: "2vw",
+                                width: "auto",
+                                height: "auto",
+
+                            }}>
+                            <Delete sx={{
+                                fontSize: "2rem"
+                            }}/>
+                        </IconButton>
+                    ) :
+                    (<IconButton onClick={ToggleFavorites}
+                                 sx={{
+                                     color: isFavorite ? "red" : "gray",
+                                     marginLeft: "2vw",
+                                     width: "auto",
+                                     height: "auto",
+                                 }}>
+                        {isFavorite ? <Favorite
+                            sx={{
+                                fontSize: "2rem"
+                            }}/> : <FavoriteBorder
+                            sx={{
+                                fontSize: "2rem"
+                            }}/>}
+                    </IconButton>)
+            }
         </Container>
     )
 }

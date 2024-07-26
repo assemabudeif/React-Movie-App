@@ -4,15 +4,14 @@ import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-import Menu from '@mui/material/Menu';
 import MenuIcon from '@mui/icons-material/Menu';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
-import MenuItem from '@mui/material/MenuItem';
-import {Movie} from "@mui/icons-material";
+import {Movie, Star} from "@mui/icons-material";
 import {Link as RouterLink} from 'react-router-dom';
 import {Drawer} from "@mui/material";
 import {useState} from "react";
+import {useSelector} from "react-redux";
 
 
 const pages = [
@@ -32,11 +31,16 @@ const pages = [
         title: 'Register',
         path: '/register',
     },
+    {
+        title: 'Favorites',
+        path: '/favorites',
+    }
 ];
 
 function ResponsiveAppBar() {
+    const state = useSelector(state => state);
+    const favLength = state.favorites.favorites.length;
     const [anchorElNav, setAnchorElNav] = React.useState(null);
-
     const [open, setOpen] = useState(false);
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget);
@@ -61,8 +65,8 @@ function ResponsiveAppBar() {
                     <Typography
                         variant="h6"
                         noWrap
-                        component="a"
-                        href="#app-bar-with-responsive-menu"
+                        component={RouterLink}
+                        to="/"
                         sx={{
                             mr: 2,
                             display: {xs: 'none', md: 'flex'},
@@ -123,8 +127,8 @@ function ResponsiveAppBar() {
                     <Typography
                         variant="h5"
                         noWrap
-                        component="a"
-                        href="/"
+                        component={RouterLink}
+                        to="/"
                         sx={{
                             mr: 2,
                             display: {xs: 'flex', md: 'none'},
@@ -149,6 +153,20 @@ function ResponsiveAppBar() {
                                 {page.title}
                             </Button>
                         ))}
+                        &nbsp;
+                        &nbsp;
+                        <Box sx={{
+                            padding: '0.5vh',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                        }}>
+                            <Star sx={{color: 'yellow', fontSize: '1.5rem'}}/>
+                            &nbsp;
+                            <Typography variant="h6" sx={{color: 'white', display: 'inline'}}>
+                                {favLength}
+                            </Typography>
+                        </Box>
                     </Box>
 
 
