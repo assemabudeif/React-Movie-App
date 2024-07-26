@@ -40,11 +40,7 @@ const pages = [
 function ResponsiveAppBar() {
     const state = useSelector(state => state);
     const favLength = state.favorites.favorites.length;
-    const [anchorElNav, setAnchorElNav] = React.useState(null);
     const [open, setOpen] = useState(false);
-    const handleOpenNavMenu = (event) => {
-        setAnchorElNav(event.currentTarget);
-    };
 
     const handleCloseNavMenu = () => {
         setAnchorElNav(null);
