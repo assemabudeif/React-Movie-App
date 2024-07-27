@@ -1,12 +1,12 @@
 const INITIAL_VALUE = {
-    movies: {}
+    loader: true
 }
-export default function MoviesReducer(state = INITIAL_VALUE, action) {
+export default function LoaderReducer(state = INITIAL_VALUE, action) {
     switch (action.type) {
-        case "GET_MOVIES_LIST":
+        case "SET_LOADER":
             return {
                 ...state,
-                movies: action.payload
+                loader: action.payload
             }
         default:
             return state

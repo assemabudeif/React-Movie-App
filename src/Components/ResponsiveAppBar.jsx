@@ -10,8 +10,9 @@ import Button from '@mui/material/Button';
 import {Movie, Star} from "@mui/icons-material";
 import {Link as RouterLink} from 'react-router-dom';
 import {Drawer} from "@mui/material";
-import {useState} from "react";
+import {useContext, useState} from "react";
 import {useSelector} from "react-redux";
+import {LangContext} from "../Context/LangContext";
 
 
 const pages = [
@@ -41,9 +42,10 @@ function ResponsiveAppBar() {
     const state = useSelector(state => state);
     const favLength = state.favorites.favorites.length;
     const [open, setOpen] = useState(false);
+    const {lang, setLang} = useContext(LangContext);
+
 
     const handleCloseNavMenu = () => {
-        setAnchorElNav(null);
     };
 
     const toggleDrawer = (state) => {
@@ -164,6 +166,11 @@ function ResponsiveAppBar() {
                             </Typography>
                         </Box>
                     </Box>
+
+                    <Button onClick={() => setLang(lang === "en" ? "ar" : "en")}
+                            sx={{color: 'white', display: 'block'}}>
+                        {lang === "en" ? "العربية" : "English"}
+                    </Button>
 
 
                 </Toolbar>
