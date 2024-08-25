@@ -127,7 +127,7 @@ function MovieComponent(props) {
                 }
             </div>
 
-            <h2>{props.movie.title.length > 12 ? (props.movie.title.substring(0, 12) + "...") : props.movie.title}</h2>
+            <h2>{props.movie.title && (props.movie.title.length > 12 ? (props.movie.title.substring(0, 12) + "...") : props.movie.title)}</h2>
             <span>{props.movie.release_date}</span>
             {
                 props.favPage ? (

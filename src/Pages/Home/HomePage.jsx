@@ -35,7 +35,7 @@ function HomePage() {
     ];
 
     const [moviesType, setMoviesType] = useState('popular');
-    const movies = useSelector(state => state.movies.movies);
+    const movies = useSelector(state => state.movies.movies) || [];
     const loading = useSelector(state => state.loader.loader);
     const [error, setError] = useState("");
     const dispatch = useDispatch();
@@ -111,7 +111,7 @@ function HomePage() {
                     </Grid>) : (
                         <Grid container rowSpacing={10} columnSpacing={{ xs: 1, sm: 2, md: 3 }} alignItems={"center"} alignContent={"center"}>
                             {
-                                movies ? movies.results.map((movie) => (
+                                movies.results ? movies.results.map((movie) => (
                                     <Grid item lg={3} md={6} sm={12}>
                                         <MovieComponent movie={movie} />
                                     </Grid>
