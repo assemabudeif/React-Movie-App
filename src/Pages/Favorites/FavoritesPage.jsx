@@ -7,6 +7,8 @@ function FavoritesPage() {
     const state = useSelector(state => state);
     const favoriteMovies = state.favorites.favorites;
 
+    
+
     return (
         <Box sx={{
             margin: "auto",
